@@ -1,0 +1,21 @@
+@hostname = localhost
+@port = 5000
+@host = http://{{hostname}}:{{port}}
+@store = My Store
+### List all the stores
+GET {{host}}/stores
+### Create a store
+POST  {{host}}/stores
+Content-Type: application/json
+
+{"name": "Apple Store"}
+### Get a store
+GET {{host}}/stores/{{store}}
+### Create item in a store
+POST {{host}}/stores/{{store}}/items
+Content-Type: application/json
+
+{"name": "Table","price": 2099}
+### Get the items from a store
+GET {{host}}/stores/{{store}}/items
+
