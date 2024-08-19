@@ -44,3 +44,23 @@ def create_item(name):
     return {
         "error": "STORE_NOT_FOUND"
     }, 404
+
+@app.get("/stores/<string:name>")
+def get_store(name):
+    for store in stores:
+        if store["name"] == name:
+            return store
+    return {
+        "error": "STORE_NOT_FOUND"
+    }, 404
+
+@app.get("/stores/<string:name>/items")
+def get_store_items(name):
+    for store in stores:
+        if store["name"] == name:
+            return {
+                "items": store["items"]
+            }
+    return {
+        "error": "STORE_NOT_FOUND"
+    }, 404
