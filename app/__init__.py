@@ -40,7 +40,7 @@ def create_item(name):
                 "price": request_data["price"]
             }
             store["items"].append(new_item)
-            return new_item
+            return new_item, 201
     return {
         "error": "STORE_NOT_FOUND"
     }, 404
