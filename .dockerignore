@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+.git/
+.dockerignore
+.gitignore
+api-requests.rest
+Dockerfile
+Makefile
+README.md
