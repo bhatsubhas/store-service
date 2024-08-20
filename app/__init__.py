@@ -14,6 +14,12 @@ stores = [
 
 app = Flask(__name__)
 
+@app.get("/healthz/status")
+def health_check():
+    return {
+        "message": "service status is healthy"
+    }
+
 @app.get("/stores")
 def get_stores():
     return {

@@ -1,14 +1,16 @@
 @hostname = localhost
 @port = 5000
 @host = http://{{hostname}}:{{port}}
-@store = My Store
+@store = Apple Store
+### Check health of the service
+GET {{host}}/healthz/status
 ### List all the stores
 GET {{host}}/stores
 ### Create a store
 POST  {{host}}/stores
 Content-Type: application/json
 
-{"name": "Apple Store"}
+{"name": "{{store}}"}
 ### Get a store
 GET {{host}}/stores/{{store}}
 ### Create item in a store
