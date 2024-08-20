@@ -17,3 +17,9 @@ stop:
 remove:
 	docker image rm $(image_name):$(image_tag)
 	docker image prune -f
+up:
+	docker compose up
+down:
+	docker compose down
+recreate:
+	docker compose up --build --force-recreate --no-deps

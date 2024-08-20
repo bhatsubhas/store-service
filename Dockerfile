@@ -13,7 +13,7 @@ RUN apt update \
         libpython3-dev \
     && python3 -m venv venv/ \
     && /venv/bin/pip install --upgrade pip setuptools wheel
-    
+
 # Build the virtualenv as a separate step: Only re-execute this step when requirements.txt changes
 FROM build AS build-env
 COPY requirements.txt /requirements.txt
@@ -26,4 +26,5 @@ FROM gcr.io/distroless/python3-debian12
 COPY --from=build-env /venv /venv
 COPY . /store-service
 WORKDIR /store-service
+EXPOSE 5000
 ENTRYPOINT [ "/venv/bin/flask", "--app", "server:app", "run", "-h", "0.0.0.0" ]
