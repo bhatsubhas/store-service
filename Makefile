@@ -3,8 +3,12 @@ image_tag = latest
 
 install:
 	pip install -r requirements.txt
-lint:
+lint_app:
 	black app/ && pylint app/
+lint_tests:
+	black tests/ && pylint tests/
+test:
+	pytest
 debug:
 	flask --app app:app run --debug
 image:
