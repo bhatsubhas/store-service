@@ -3,8 +3,10 @@ image_tag = latest
 
 install:
 	pip install -r requirements.txt
+lint:
+	black app/ && pylint app/
 debug:
-	flask --app server:app run --debug
+	flask --app app:app run --debug
 image:
 	docker image build -t $(image_name):$(image_tag) .
 start:
