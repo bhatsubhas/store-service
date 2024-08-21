@@ -27,4 +27,4 @@ COPY --from=build-env /venv /venv
 COPY . /store-service
 WORKDIR /store-service
 EXPOSE 5000
-ENTRYPOINT [ "/venv/bin/flask", "--app", "server:app", "run", "-h", "0.0.0.0" ]
+ENTRYPOINT [ "/venv/bin/flask", "--app", "app:app", "run", "-h", "0.0.0.0" ]
