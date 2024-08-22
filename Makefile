@@ -8,7 +8,10 @@ lint_app:
 lint_tests:
 	black tests/ && pylint tests/
 test:
-	pytest
+	coverage run -m pytest -vvv
+	coverage report && coverage html
+clean:
+	rm -rf htmlcov/ .pytest_cache/ .coverage
 debug:
 	flask --app app:app run --debug
 image:
