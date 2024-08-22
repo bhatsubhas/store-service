@@ -24,7 +24,7 @@ RUN /venv/bin/pip install \
 # Copy the virtualenv to the distroless image
 FROM gcr.io/distroless/python3-debian12
 COPY --from=build-env /venv /venv
-COPY . /store-service
+COPY app/ /store-service/app
 WORKDIR /store-service
 EXPOSE 5000
 ENTRYPOINT [ "/venv/bin/flask", "--app", "app:app", "run", "-h", "0.0.0.0" ]

@@ -1,10 +1,1 @@
-venv/
-__pycache__/
-.git/
-.dockerignore
-.gitignore
-.coverage
-api-requests.rest
-Dockerfile
-Makefile
-README.md
+**/__pycache__/
