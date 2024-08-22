@@ -3,6 +3,7 @@ __pycache__/
 .git/
 .dockerignore
 .gitignore
+.coverage
 api-requests.rest
 Dockerfile
 Makefile
