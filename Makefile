@@ -2,12 +2,12 @@ image_name = store-service
 image_tag = latest
 
 install:
-	pip install -r requirements.txt
-lint_app:
-	black app/ && pylint app/
-lint_tests:
-	black tests/ && pylint tests/
-test:
+	pip install -r requirements-dev.txt
+format:
+	black app/ tests/
+lint: format
+	pylint app/ tests/
+test: lint
 	coverage run -m pytest -vvv
 	coverage report && coverage html
 clean:
