@@ -7,16 +7,16 @@ def test_get_stores_list(client):
 
 
 def test_get_store(client):
-    store_name = "My Store"
-    response = client.get(f"/stores/{store_name}")
+    store_id = "1"
+    response = client.get(f"/stores/{store_id}")
     assert response.status_code == 200
 
     store = response.get_json()
-    assert store["name"] == store_name
-    assert isinstance(store["items"], list)
+    assert store["store_id"] == store_id
+    assert store["name"] == "My Store"
 
-    store_name = "Unknown"
-    response = client.get(f"/stores/{store_name}")
+    store_id = "Unknown"
+    response = client.get(f"/stores/{store_id}")
     assert response.status_code == 404
 
     error = response.get_json()
@@ -30,4 +30,4 @@ def test_create_store(client):
 
     store = response.get_json()
     assert store["name"] == "Test Store"
-    assert isinstance(store["items"], list) and len(store["items"]) == 0
+    assert store["store_id"] is not None
