@@ -9,7 +9,7 @@ lint: format
 	pylint app/ tests/
 test: lint
 	coverage run -m pytest -vvv
-coverage:
+coverage: test
 	coverage html
 clean:
 	rm -rf htmlcov/ .pytest_cache/ .coverage
