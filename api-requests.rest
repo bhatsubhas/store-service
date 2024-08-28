@@ -1,23 +1,58 @@
 @hostname = localhost
 @port = 5000
 @host = http://{{hostname}}:{{port}}
-@store = Apple Store
+@store_id = 1
+@item_id = eafa978023a74cceb4d1084dd823cb04
 ### Check health of the service
 GET {{host}}/healthz/status
-### List all the stores
-GET {{host}}/stores
+#### Stores Endpoint ####
+
 ### Create a store
 POST  {{host}}/stores
 Content-Type: application/json
 
-{"name": "{{store}}"}
+{"name": "Apple Store"}
+
+### List all the stores
+GET {{host}}/stores
+
 ### Get a store
-GET {{host}}/stores/{{store}}
-### Create item in a store
-POST {{host}}/stores/{{store}}/items
+GET {{host}}/stores/{{store_id}}
+
+### Store Not found
+GET {{host}}/stores/abcd
+
+### Delete Store
+DELETE  {{host}}/stores/{{store_id}}
+
+### Update Store
+PATCH {{host}}/stores/{{store_id}}
 Content-Type: application/json
 
-{"name": "Table","price": 2099}
-### Get the items from a store
-GET {{host}}/stores/{{store}}/items
+{"name":"Compact Disc"}
 
+#### Items Endpoint ####
+
+### Create item in a store
+POST {{host}}/items
+Content-Type: application/json
+
+{"name": "CD","price": 199, "store_id": "1"}
+
+### Get the item
+GET {{host}}/items
+
+### Get a single item 
+GET {{host}}/items/{{item_id}}
+
+### Item not found
+GET {{host}}/items/abcd
+
+### Delete Item
+DELETE  {{host}}/items/{{item_id}}
+
+### Update Item
+PATCH {{host}}/items/{{item_id}}
+Content-Type: application/json
+
+{"name":"Compact Disc", "price": 19 }
