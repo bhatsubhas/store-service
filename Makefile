@@ -1,31 +1,65 @@
-image_name = store-service
-image_tag = latest
+VENV = venv
+IMAGE_NAME = store-service
+IMAGE_TAG = latest
 
-install:
-	pip install -r requirements-dev.txt
+.DEFAULT_GOAL = help
+
+.PHONY: help
+help:
+	@echo "Makefile commands:"
+	@echo "	venv		- Create venv and install dependeices"
+	@echo "	format		- Format the python code using black"
+	@echo "	lint		- Lint the python code using pylint"
+	@echo "	test		- Run automated tests using pytest"
+	@echo "	coverage	- Generate code coverage with pytest and coverage"
+	@echo "	run		- Run the flask app in debug mode"
+	@echo "	clean		- Clean the temporary files"
+
+.PHONY: venv
+venv: $(VENV)/.installed
+$(VENV)/.installed: Makefile pyproject.toml
+	test -d $(VENV) || python3 -m venv $(VENV)
+	$(VENV)/bin/python3 -m ensurepip
+	$(VENV)/bin/pip install -q -U pip
+	$(VENV)/bin/pip install -r requirements.txt
+	$(VENV)/bin/pip install -r requirements-dev.txt
+	touch $(VENV)/.installed
+
+.PHONY: format
 format:
-	black app/ tests/
+	$(VENV)/bin/black app/ tests/
+
+.PHONY: lint
 lint: format
-	pylint app/ tests/
+	$(VENV)/bin/pylint app/ tests/
+
+.PHONY: test
 test: lint
-	coverage run -m pytest -vvv
+	$(VENV)/bin/coverage run -m pytest -vvv
+
+.PHONY: coverage
 coverage: test
-	coverage html
+	$(VENV)/bin/coverage html
+
+.PHONY: run
+run:
+	$(VENV)/bin/flask --app app:app run --debug
+
+.PHONY: venv
 clean:
-	rm -rf htmlcov/ .pytest_cache/ .coverage
-debug:
-	flask --app app:app run --debug
+	rm -rf htmlcov/ .pytest_cache/ .coverage */__pycache__
+
 image:
-	docker image build -t $(image_name):$(image_tag) .
+	docker image build -t $(IMAGE_NAME):$(IMAGE_TAG) .
 start:
-	docker container run -d -p 5000:5000 --rm --name $(image_name) 	$(image_name):$(image_tag)
+	docker container run -d -p 5000:5000 --rm --name $(IMAGE_NAME) 	$(IMAGE_NAME):$(IMAGE_TAG)
 log:
-	docker container logs -f $(image_name)
+	docker container logs -f $(IMAGE_NAME)
 stop:
-	docker container stop $(image_name)
+	docker container stop $(IMAGE_NAME)
 	docker container prune -f
 remove:
-	docker image rm $(image_name):$(image_tag)
+	docker image rm $(IMAGE_NAME):$(IMAGE_TAG)
 	docker image prune -f
 up:
 	docker compose up
