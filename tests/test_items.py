@@ -2,7 +2,7 @@ def test_get_items_list(client):
     response = client.get("/items")
     assert response.status_code == 200
 
-    items = response.get_json()["items"]
+    items = response.get_json()
     assert isinstance(items, list)
 
 
@@ -13,7 +13,7 @@ def test_post_item(client):
 
     item = response.get_json()
     assert (
-        item["item_id"] is not None
+        item["id"] is not None
         and item["name"] == "Compact Disc"
         and item["price"] == 1299
     )
@@ -31,7 +31,7 @@ def test_post_item(client):
 
     item_data = {"name": "Chair", "price": 1299}
     response = client.post("/items", json=item_data)
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 
 def test_get_item(client):
@@ -41,7 +41,7 @@ def test_get_item(client):
 
     item = response.get_json()
     assert (
-        item["item_id"] == "1"
+        item["id"] == "1"
         and item["store_id"] == "1"
         and item["name"] == "Chair"
         and item["price"] == 1299
@@ -63,7 +63,7 @@ def test_update_item(client):
 
     item = response.get_json()
     assert (
-        item["item_id"] == "1"
+        item["id"] == "1"
         and item["name"] == "Premium Chair"
         and item["price"] == 1399
     )
@@ -71,12 +71,17 @@ def test_update_item(client):
     item_id = "1"
     item_data = {"name": "Premium Chair"}
     response = client.patch(f"/items/{item_id}", json=item_data)
-    assert response.status_code == 400
+    assert response.status_code == 200
 
     item_id = "1234"
     item_data = {"name": "Premium Chair", "price": 1399}
     response = client.patch(f"/items/{item_id}", json=item_data)
     assert response.status_code == 404
+
+    item_id = "1"
+    item_data = {}
+    response = client.patch(f"/items/{item_id}", json=item_data)
+    assert response.status_code == 400
 
 
 def test_delete_item(client):

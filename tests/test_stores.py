@@ -2,7 +2,7 @@ def test_get_stores_list(client):
     response = client.get("/stores")
     assert response.status_code == 200
 
-    stores = response.get_json()["stores"]
+    stores = response.get_json()
     assert isinstance(stores, list) and len(stores) >= 0
 
 
@@ -12,7 +12,7 @@ def test_get_store(client):
     assert response.status_code == 200
 
     store = response.get_json()
-    assert store["store_id"] == store_id
+    assert store["id"] == store_id
     assert store["name"] == "My Store"
 
     store_id = "Unknown"
@@ -30,11 +30,11 @@ def test_create_store(client):
 
     store = response.get_json()
     assert store["name"] == "Test Store"
-    assert store["store_id"] is not None
+    assert store["id"] is not None
 
     request_body = {}
     response = client.post("/stores", json=request_body)
-    assert response.status_code == 400
+    assert response.status_code == 422
 
     request_body = {"name": "My Store"}
     response = client.post("/stores", json=request_body)
@@ -48,12 +48,12 @@ def test_update_store(client):
     assert response.status_code == 200
 
     item = response.get_json()
-    assert item["store_id"] == "1" and item["name"] == "My Premium Store"
+    assert item["id"] == "1" and item["name"] == "My Premium Store"
 
     store_id = "1"
     store_data = {}
     response = client.patch(f"/stores/{store_id}", json=store_data)
-    assert response.status_code == 400
+    assert response.status_code == 422
 
     store_id = "1234"
     store_data = {"name": "My Premium Store"}

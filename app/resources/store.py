@@ -1,46 +1,44 @@
 import uuid
 
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
-from ..db import stores
+from app.db import stores
+from app.schemas.store import StoreSchema
 
 store_blp = Blueprint("stores", __name__, description="APIs to manage stores")
 
 
 @store_blp.route("/stores")
 class Stores(MethodView):
-    def post(self):
-        store_data = request.get_json()
-        if "name" not in store_data:
-            abort(400, error="'name' is mandatory")
-
+    @store_blp.arguments(StoreSchema)
+    @store_blp.response(201, StoreSchema)
+    def post(self, store_data):
         for store in stores.values():
             if store["name"] == store_data["name"]:
                 abort(400, error="Store already exists")
         store_id = uuid.uuid4().hex
-        store = {**store_data, "store_id": store_id}
+        store = {**store_data, "id": store_id}
         stores[store_id] = store
         return store, 201
 
+    @store_blp.response(200, StoreSchema(many=True))
     def get(self):
-        return {"stores": list(stores.values())}
+        return list(stores.values())
 
 
 @store_blp.route("/stores/<store_id>")
 class StoresById(MethodView):
+    @store_blp.response(200, StoreSchema)
     def get(self, store_id):
         try:
             return stores[store_id]
         except KeyError:
             abort(404, error="Store not found")
 
-    def patch(self, store_id):
-        store_data = request.get_json()
-        if "name" not in store_data:
-            abort(400, error="'name' must be present")
-
+    @store_blp.arguments(StoreSchema)
+    @store_blp.response(200, StoreSchema)
+    def patch(self, store_data, store_id):
         try:
             store = stores[store_id]
             store |= store_data
@@ -48,6 +46,7 @@ class StoresById(MethodView):
         except KeyError:
             abort(404, error="Store not found")
 
+    @store_blp.response(204)
     def delete(self, store_id):
         try:
             del stores[store_id]

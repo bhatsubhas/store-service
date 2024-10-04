@@ -3,10 +3,10 @@ import os
 from flask import Flask
 from flask_smorest import Api
 
-from .config import DevConfig, ProdConfig
-from .resources.healthz import healthz_blp
-from .resources.item import item_blp
-from .resources.store import store_blp
+from app.config import DevConfig, ProdConfig
+from app.resources.healthz import healthz_blp
+from app.resources.item import item_blp
+from app.resources.store import store_blp
 
 app = Flask(__name__)
 if os.environ.get("FLASK_ENV") == "production":

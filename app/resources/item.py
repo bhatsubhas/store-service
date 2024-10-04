@@ -1,25 +1,19 @@
 import uuid
 
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
-from ..db import items, stores
+from app.db import items, stores
+from app.schemas.item import ItemSchema, ItemUpdateSchema
 
 item_blp = Blueprint("items", __name__, description="APIs to manage items")
 
 
 @item_blp.route("/items")
 class Items(MethodView):
-    def post(self):
-        item_data = request.get_json()
-        if (
-            "price" not in item_data
-            or "name" not in item_data
-            or "store_id" not in item_data
-        ):
-            abort(400, error="'price', 'name' and 'store_id' are mandatory")
-
+    @item_blp.arguments(ItemSchema)
+    @item_blp.response(201, ItemSchema)
+    def post(self, item_data):
         for item in items.values():
             if (
                 item["name"] == item_data["name"]
@@ -31,25 +25,29 @@ class Items(MethodView):
             abort(404, error="Store not found")
 
         item_id = uuid.uuid4().hex
-        item = {**item_data, "item_id": item_id}
+        item = {**item_data, "id": item_id}
         items[item_id] = item
         return item, 201
 
+    @item_blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {"items": list(items.values())}
+        return list(items.values())
 
 
 @item_blp.route("/items/<item_id>")
 class ItemsById(MethodView):
+    @item_blp.response(200, ItemSchema)
     def get(self, item_id):
         try:
             return items[item_id]
         except KeyError:
             abort(404, error="Item not found")
 
-    def patch(self, item_id):
-        item_data = request.get_json()
-        if "name" not in item_data or "price" not in item_data:
+    @item_blp.arguments(ItemUpdateSchema)
+    @item_blp.response(200, ItemSchema)
+    def patch(self, item_data, item_id):
+        print(item_data)
+        if not ("name" in item_data or "price" in item_data):
             abort(400, error="Either 'name' or 'price' must be present")
 
         try:
@@ -59,6 +57,7 @@ class ItemsById(MethodView):
         except KeyError:
             abort(404, error="Item not found")
 
+    @item_blp.response(204)
     def delete(self, item_id):
         try:
             del items[item_id]
