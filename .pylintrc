@@ -644,3 +644,8 @@ init-import=no
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
+[MASTER]
+disable=
+    C0114,
+    C0115,
+    C0116,
