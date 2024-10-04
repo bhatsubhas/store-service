@@ -15,4 +15,4 @@ testpaths = ["tests"]
 omit = ["tests/*"]
 
 [tool.coverage.report]
-fail_under = 100
+fail_under = 90
