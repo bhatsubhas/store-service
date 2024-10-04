@@ -27,6 +27,7 @@ $(VENV)/.installed: Makefile pyproject.toml
 
 .PHONY: format
 format:
+	$(VENV)/bin/isort app/ tests/
 	$(VENV)/bin/black app/ tests/
 
 .PHONY: lint
@@ -43,7 +44,7 @@ coverage: test
 
 .PHONY: run
 run:
-	$(VENV)/bin/flask --app app:app run --debug
+	FLASK_ENV="development" $(VENV)/bin/flask --app app:app run
 
 .PHONY: venv
 clean:
