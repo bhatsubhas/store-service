@@ -1,7 +1,10 @@
+import os
+
 from flask import Config
 
 
 class CommonConfig(Config):
+    PROPAGATE_EXCEPTIONS = True
     API_TITLE = "Stores API"
     API_VERSION = "v1"
     OPENAPI_VERSION = "3.0.2"
@@ -12,6 +15,8 @@ class CommonConfig(Config):
     OPENAPI_RAPIDOC_URL = (
         "https://cdn.jsdelivr.net/npm/rapidoc/dist/rapidoc-min.js"
     )
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///data.db")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevConfig(CommonConfig):

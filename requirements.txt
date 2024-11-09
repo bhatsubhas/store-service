@@ -1,3 +1,5 @@
 Flask==3.0.3
 flask-smorest==0.44.0
 python-dotenv==1.0.1
+SQLAlchemy==2.0.36
+Flask-SQLAlchemy==3.1.1

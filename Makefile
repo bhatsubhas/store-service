@@ -44,27 +44,26 @@ coverage: test
 
 .PHONY: run
 run:
-	FLASK_ENV="development" $(VENV)/bin/flask --app app:app run
+	FLASK_ENV="development" $(VENV)/bin/flask --app app:create_app run
 
 .PHONY: venv
 clean:
-	rm -rf htmlcov/ .pytest_cache/ .coverage */__pycache__
+	rm -rf htmlcov/ .pytest_cache/ .coverage */__pycache__ instance/
 
 image:
 	docker image build -t $(IMAGE_NAME):$(IMAGE_TAG) .
-start:
-	docker container run -d -p 5000:5000 --rm --name $(IMAGE_NAME) 	$(IMAGE_NAME):$(IMAGE_TAG)
-log:
-	docker container logs -f $(IMAGE_NAME)
-stop:
-	docker container stop $(IMAGE_NAME)
-	docker container prune -f
+
 remove:
 	docker image rm $(IMAGE_NAME):$(IMAGE_TAG)
 	docker image prune -f
 up:
-	docker compose up
+	docker compose up -d
+
+logs:
+	docker compose logs -f
+
 down:
 	docker compose down
+
 recreate:
 	docker compose up --build --force-recreate --no-deps

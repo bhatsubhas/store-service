@@ -1,6 +1,7 @@
-from marshmallow import Schema, fields
+from marshmallow import fields
+
+from app.schemas.item import BaseItemSchema, BaseStoreSchema
 
 
-class StoreSchema(Schema):
-    id = fields.Str(dump_only=True)
-    name = fields.Str(required=True)
+class StoreSchema(BaseStoreSchema):
+    items = fields.List(fields.Nested(BaseItemSchema(), dump_only=True))

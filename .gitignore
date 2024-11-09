@@ -2,4 +2,5 @@
 .zed/
 venv/
 __pycache__/
+instance/
 .coverage
